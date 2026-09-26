@@ -1,0 +1,54 @@
+class Solution {
+public:
+
+    string firstApproachIterative(int &n) {
+
+        // bc
+        if (n == 1) return "1";
+
+        string ans = "1";
+
+        // process till n
+        int i = 2;
+        while (i <= n) {
+            
+            string temp = "";
+            // count rle
+            int count = 1;
+            int j = 0;
+            while (j+1 < ans.length()) {
+                
+                // next is also same
+                if (ans[j] == ans[j+1]) {
+                    count++;
+                }
+                // not same
+                else {
+                    // store freq and char in ans
+                    temp += to_string(count) + ans[j];
+                    // reset count
+                    count = 1;
+                }
+
+                // update j
+                j++;
+            }
+
+            // handle last case
+            temp += to_string(count) + ans[j];
+
+            // update i
+            i++;
+
+            // store tmep in ans
+            ans = move(temp);
+        }
+
+        return ans;
+    }
+
+    string countAndSay(int n) {
+        // 01 approach - iterative
+        return firstApproachIterative(n);
+    }
+};
