@@ -1,0 +1,68 @@
+#include <vector>
+#include <string>
+#include <array>
+
+using namespace std;
+
+class BusBooking {
+private:
+    int n;
+    vector<array<int, 4>> bookedCost; // -1 means not booked; otherwise stores the cost paid when booked
+    int totalTime;
+    int bookedCount;
+
+    int colIndex(char c) {
+        switch (c) {
+            case 'A': return 0;
+            case 'B': return 1;
+            case 'C': return 2;
+            case 'D': return 3;
+        }
+        return -1;
+    }
+
+public:
+    BusBooking(int n) : n(n), bookedCost(n + 1), totalTime(0), bookedCount(0) {
+        for (int i = 0; i <= n; ++i) {
+            bookedCost[i].fill(-1);
+        }
+    }
+
+    void toggle(string seat) {
+        char col = seat[0];
+        int row = stoi(seat.substr(1));
+        int idx = colIndex(col);
+
+        if (bookedCost[row][idx] != -1) {
+            // Seat is currently booked -> free it
+            totalTime -= bookedCost[row][idx];
+            bookedCost[row][idx] = -1;
+            bookedCount--;
+        } else {
+            // Seat is free -> book it
+            int cost = 1;
+            if (col == 'A') {
+                // A is window, adjacent middle is B
+                if (bookedCost[row][1] != -1) cost = 3;
+            } else if (col == 'D') {
+                // D is window, adjacent middle is C
+                if (bookedCost[row][2] != -1) cost = 3;
+            }
+            // B and C are middle seats -> always cost 1
+
+            bookedCost[row][idx] = cost;
+            totalTime += cost;
+            bookedCount++;
+        }
+    }
+
+    int getTotalTime() {
+        return totalTime;
+    }
+
+    int getMinTime() {
+        // In the optimal order, every seat can be booked for 1 second:
+        // book all window seats before their adjacent middle seats.
+        return bookedCount;
+    }
+};
