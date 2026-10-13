@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool threeFibonacciSum(int n) {
+        // Sum of three consecutive Fibonacci numbers F[i]+F[i+1]+F[i+2]
+        // equals 2 * F[i+2]. So n is valid iff n == 2 * F[k] for some k >= 2.
+        long long a = 0, b = 1;
+        while (true) {
+            long long c = a + b;          // F[k], with k increasing
+            if (2 * c > n) break;
+            if (2 * c == n) return true;
+            a = b;
+            b = c;
+        }
+        return false;
+    }
+};
